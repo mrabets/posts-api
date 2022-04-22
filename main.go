@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/golang-jwt/jwt"
 	"github.com/gorilla/mux"
@@ -90,6 +91,9 @@ func login(w http.ResponseWriter, r *http.Request) {
 
 func GenerateToken() (string, error) {
 	token := jwt.New(jwt.SigningMethodHS256)
+
+	claims := token.Claims.(jwt.MapClaims)
+	claims["exp"] = time.Now().Add(time.Hour * 72).Unix()
 
 	tokenString, err := token.SignedString(secretKey)
 
